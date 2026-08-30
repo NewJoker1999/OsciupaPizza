@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Menu digitale accessibile della pizzeria O'SciupaPizza">
+    <title>Menu O'SciupaPizza</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons (per frecce, telefono e mappa) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Flag Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css"/>
+    
+    <style>
+        body { 
+            padding-top: 70px; 
+            background-color: #f4f6f8; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        } 
+        /* Navbar */
+        .navbar { background-color: #212529 !important; }
+        .navbar-brand { font-size: 1.1rem; font-weight: 700; flex-grow: 1; text-align: center; margin-right: 0;}
+        .back-btn { font-size: 1.5rem; color: white; text-decoration: none; padding: 0 15px; visibility: hidden; width: 50px; background: none; border: none;}
+        .lang-selector { width: 85px; display: flex; justify-content: flex-end; }
+        
+        /* Contenitore principale */
+        main { flex: 1; }
+
+        /* Categorie Home */
+        .category-btn {
+            background-color: #fff;
+            border: none;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+            transition: transform 0.1s;
+            cursor: pointer;
+        }
+        .category-btn:active { transform: scale(0.97); }
+        
+        /* Schede Piatti */
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 12px; }
+        .card-body { padding: 1.2rem; }
+        .card-title { font-size: 1.1rem; font-weight: 700; color: #222; margin-bottom: 0.3rem; }
+        .price-badge { font-size: 0.95rem; padding: 0.4em 0.6em; border-radius: 8px; white-space: nowrap; }
+        .card-text { font-size: 0.9rem; color: #555; line-height: 1.4; margin-bottom: 0.5rem; }
+        .allergen-info { font-size: 0.8rem; color: #777; margin: 0; background-color: #f8f9fa; padding: 5px 8px; border-radius: 6px; display: inline-block; margin-top: 5px;}
+        
+        .section-title { font-size: 1.5rem; font-weight: 800; color: #dc3545; margin-bottom: 20px; text-align: center; text-transform: uppercase; }
+        .dropdown-toggle::after { display: none; }
+        .fi { border-radius: 2px; } 
+
+        /* Footer */
+        footer { background-color: #212529; color: #adb5bd; font-size: 0.85rem; margin-top: 40px;}
+        footer a { color: #adb5bd; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar Superiore -->
+    <nav class="navbar navbar-dark fixed-top shadow-sm d-flex flex-nowrap align-items-center px-2">
+        <button id="backBtn" class="back-btn" aria-label="Torna indietro" onclick="showHome()"><i class="bi bi-arrow-left"></i></button>
+        
+        <span class="navbar-brand text-truncate tr" data-it="Menu Pizzeria O'SciupaPizza" data-en="O'SciupaPizza Menu" data-es="Menú Pizzería O'SciupaPizza" data-fr="Menu Pizzeria O'SciupaPizza" data-de="O'SciupaPizza Menü">Menu Pizzeria O'SciupaPizza</span>
+        
+        <div class="dropdown lang-selector">
+            <button class="btn btn-dark dropdown-toggle p-1 border-0 fw-bold d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Seleziona lingua">
+                <span id="currentLangBtn"><span class="fi fi-it"></span> IT</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width: 100px;">
+                <li><button class="dropdown-item d-flex align-items-center gap-2" onclick="changeLanguage('it', 'fi-it', 'IT')"><span class="fi fi-it"></span> Italiano</button></li>
+                <li><button class="dropdown-item d-flex align-items-center gap-2" onclick="changeLanguage('en', 'fi-gb', 'EN')"><span class="fi fi-gb"></span> English</button></li>
+                <li><button class="dropdown-item d-flex align-items-center gap-2" onclick="changeLanguage('es', 'fi-es', 'ES')"><span class="fi fi-es"></span> Español</button></li>
+                <li><button class="dropdown-item d-flex align-items-center gap-2" onclick="changeLanguage('fr', 'fi-fr', 'FR')"><span class="fi fi-fr"></span> Français</button></li>
+                <li><button class="dropdown-item d-flex align-items-center gap-2" onclick="changeLanguage('de', 'fi-de', 'DE')"><span class="fi fi-de"></span> Deutsch</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenitore Principale -->
+    <main class="container my-4" aria-live="polite">
+
+        <!-- VISTA 1: HOME (Lista Categorie) -->
+        <div id="homeView">
+                        <h5 class="text-center text-muted mb-4 mt-2 tr" data-it="Scegli una categoria" data-en="Choose a category" data-es="Elige una categoría" data-fr="Choisissez une catégorie" data-de="Wähle eine Kategorie">Scegli una categoria</h5>
+            
+            <button class="category-btn w-100" onclick="showCategory('fritti')">
+                <span class="tr" data-it="Fritti" data-en="Fried Foods" data-es="Fritos" data-fr="Fritures" data-de="Frittiertes">Fritti</span>
+            </button>
+            <button class="category-btn w-100" onclick="showCategory('gourmet')">
+                <span class="tr" data-it="Pizze Gourmet" data-en="Gourmet Pizzas" data-es="Pizzas Gourmet" data-fr="Pizzas Gourmet" data-de="Gourmet-Pizzen">Pizze Gourmet</span>
+            </button>
+            <button class="category-btn w-100" onclick="showCategory('rosse')">
+                <span class="tr" data-it="Pizze Rosse" data-en="Red Pizzas" data-es="Pizzas Rojas" data-fr="Pizzas Rouges" data-de="Rote Pizzen">Pizze Rosse</span>
+            </button>
+            <button class="category-btn w-100" onclick="showCategory('calzoni')">
+                <span class="tr" data-it="Calzoni" data-en="Calzones" data-es="Calzones" data-fr="Calzones" data-de="Calzonen">Calzoni</span>
+            </button>
+            <button class="category-btn w-100" onclick="showCategory('bianche')">
+                <span class="tr" data-it="Pizze Bianche" data-en="White Pizzas" data-es="Pizzas Blancas" data-fr="Pizzas Blanches" data-de="Weiße Pizzen">Pizze Bianche</span>
+            </button>
+            <button class="category-btn w-100" onclick="showCategory('saltimbocca')">
+                <span class="tr" data-it="Saltimbocca & Panuozzi" data-en="Saltimbocca & Panuozzi" data-es="Saltimbocca y Panuozzi" data-fr="Saltimbocca & Panuozzi" data-de="Saltimbocca & Panuozzi">Saltimbocca & Panuozzi</span>
+            </button>
+        </div>
+
+        <!-- VISTA 2: DETTAGLIO CATEGORIA -->
+        <div id="categoryView" class="d-none">
+            
+            <!-- SEZIONE FRITTI -->
+            <section id="cat-fritti" class="menu-section d-none">
+                <h2 class="section-title tr" data-it="FRITTI" data-en="FRIED FOODS" data-es="FRITOS" data-fr="FRITURES" data-de="FRITTIERTES">FRITTI</h2>
+                
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between">
+                        <span class="tr" data-it="Sfizi" data-en="Snacks" data-es="Aperitivos" data-fr="Amuse-bouches" data-de="Snacks">Sfizi</span>
+                        <span class="badge bg-success price-badge">€ 1,50</span>
+                    </h3>
+                    <p class="card-text tr" data-it="Crocchè, Arancino, Polpetta, timballi" data-en="Potato croquette, Arancino, Meatball, timbales" data-es="Croqueta, Arancino, Albóndiga, timbales" data-fr="Croquette, Arancino, Boulette, timbales" data-de="Krokette, Arancino, Fleischbällchen, Timbales">Crocchè, Arancino, Polpetta, timballi</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥚 U: Uova, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥚 U: Eggs, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥚 U: Huevos, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥚 U: Œufs, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥚 U: Eier, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥚 U: Uova, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between">
+                        <span class="tr" data-it="Timballi Speciali" data-en="Special Timbales" data-es="Timbales Especiales" data-fr="Timbales Spéciales" data-de="Spezielle Timbales">Timballi Speciali</span>
+                        <span class="badge bg-success price-badge">€ 2,50</span>
+                    </h3>
+                    <p class="card-text tr" data-it="Broccoli e salsiccia, nerano, cacio e pepe" data-en="Broccoli and sausage, nerano, cacio e pepe" data-es="Brócoli y salchicha, nerano, cacio e pepe" data-fr="Brocoli et saucisse, nerano, cacio e pepe" data-de="Brokkoli und Wurst, Nerano, Cacio e Pepe">Broccoli e salsiccia, nerano, cacio e pepe</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥚 U: Uova, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥚 U: Eggs, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥚 U: Huevos, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥚 U: Œufs, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥚 U: Eier, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥚 U: Uova, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between">
+                        <span class="tr" data-it="Frittelle (5pz)" data-en="Fritters (5pcs)" data-es="Buñuelos (5uds)" data-fr="Beignets (5pcs)" data-de="Krapfen (5Stk)">Frittelle (5pz)</span>
+                        <span class="badge bg-success price-badge">€ 1,00</span>
+                    </h3>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between">
+                        <span class="tr" data-it="Patatine fritte*" data-en="French fries*" data-es="Patatas fritas*" data-fr="Frites*" data-de="Pommes frites*">Patatine fritte*</span>
+                        <span class="badge bg-success price-badge">€ 3,50</span>
+                    </h3>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between">
+                        <span class="tr" data-it="Alette di pollo* (3 pz)" data-en="Chicken wings* (3 pcs)" data-es="Alitas de pollo* (3 uds)" data-fr="Ailes de poulet* (3 pcs)" data-de="Hähnchenflügel* (3 Stk)">Alette di pollo* (3 pz)</span>
+                        <span class="badge bg-success price-badge">€ 4,00</span>
+                    </h3>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between">
+                        <span class="tr" data-it="Spiedini di pollo" data-en="Chicken skewers" data-es="Brochetas de pollo" data-fr="Brochettes de poulet" data-de="Hähnchenspieße">Spiedini di pollo</span>
+                        <span class="badge bg-success price-badge">€ 4,00</span>
+                    </h3>
+                </div></article>
+            </section>
+
+            <!-- SEZIONE PIZZE GOURMET -->
+            <section id="cat-gourmet" class="menu-section d-none">
+                <h2 class="section-title tr" data-it="PIZZE GOURMET" data-en="GOURMET PIZZAS" data-es="PIZZAS GOURMET" data-fr="PIZZAS GOURMET" data-de="GOURMET-PIZZEN">PIZZE GOURMET</h2>
+                <p class="text-center text-muted small tr" data-it="Prezzi: Singola / Mezzo Metro" data-en="Prices: Single / Half Meter" data-es="Precios: Individual / Medio Metro" data-fr="Prix: Simple / Demi Mètre" data-de="Preise: Einzel / Halber Meter">Prezzi: Singola / Mezzo Metro</p>
+                
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>O' Sciupapizza</span><span class="badge bg-danger price-badge">€ 8,00 / 17,00</span></h3>
+                    <p class="card-text tr" data-it="Mozz fior di latte, pesto basilico, pomodorini secchi, ricotta, pancetta" data-en="Fior di latte mozz, basil pesto, sun-dried tomatoes, ricotta, bacon" data-es="Mozzarella fior di latte, pesto albahaca, tomates secos, ricotta, panceta" data-fr="Mozzarella fior di latte, pesto basilic, tomates séchées, ricotta, pancetta" data-de="Fior di Latte Mozz, Basilikumpesto, getrocknete Tomaten, Ricotta, Speck">Mozz fior di latte, pesto basilico, pomodorini secchi, ricotta, pancetta</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini, 🥜 F: Frutta a guscio" data-en="🌾 G: Gluten, 🥛 L: Dairy, 🥜 F: Nuts" data-es="🌾 G: Gluten, 🥛 L: Lácteos, 🥜 F: Frutos secos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers, 🥜 F: Fruits à coque" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte, 🥜 F: Nüsse">🌾 G: Glutine, 🥛 L: Latticini, 🥜 F: Frutta a guscio</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Tonnina</span><span class="badge bg-danger price-badge">€ 8,00 / 17,00</span></h3>
+                    <p class="card-text tr" data-it="Mozz fior di latte, crema di cipolle e all'uscita tonno a filetto" data-en="Fior di latte mozz, onion cream, tuna fillet added after" data-es="Mozzarella fior di latte, crema de cebolla y atún en filete" data-fr="Mozzarella fior di latte, crème d'oignon et filet de thon à la sortie" data-de="Fior di Latte Mozz, Zwiebelcreme, Thunfischfilet">Mozz fior di latte, crema di cipolle e all'uscita tonno a filetto</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini, 🐟 P: Pesce" data-en="🌾 G: Gluten, 🥛 L: Dairy, 🐟 P: Fish" data-es="🌾 G: Gluten, 🥛 L: Lácteos, 🐟 P: Pescado" data-fr="🌾 G: Gluten, 🥛 L: Laitiers, 🐟 P: Poisson" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte, 🐟 P: Fisch">🌾 G: Glutine, 🥛 L: Latticini, 🐟 P: Pesce</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Mortadellosa</span><span class="badge bg-danger price-badge">€ 8,00 / 17,00</span></h3>
+                    <p class="card-text tr" data-it="Mozz fior di latte, mortadella, crema pistacchio, granella di pistacchio" data-en="Fior di latte mozz, mortadella, pistachio cream, chopped pistachios" data-es="Mozzarella fior di latte, mortadela, crema de pistacho, pistacho picado" data-fr="Mozzarella fior di latte, mortadelle, crème pistache, éclats de pistache" data-de="Fior di Latte Mozz, Mortadella, Pistaziencreme, gehackte Pistazien">Mozz fior di latte, mortadella, crema pistacchio, granella di pistacchio</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini, 🥜 F: Frutta a guscio" data-en="🌾 G: Gluten, 🥛 L: Dairy, 🥜 F: Nuts" data-es="🌾 G: Gluten, 🥛 L: Lácteos, 🥜 F: Frutos secos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers, 🥜 F: Fruits à coque" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte, 🥜 F: Nüsse">🌾 G: Glutine, 🥛 L: Latticini, 🥜 F: Frutta a guscio</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Napulegna</span><span class="badge bg-danger price-badge">€ 7,50 / 16,00</span></h3>
+                    <p class="card-text tr" data-it="Pizza Napoli con datterino rosso, cornicione ripieno di ricotta" data-en="Naples pizza with red datterino tomato, ricotta stuffed crust" data-es="Pizza Napoli con tomate datterino rojo, borde relleno de ricotta" data-fr="Pizza Naples avec datterino rouge, croûte farcie à la ricotta" data-de="Neapel Pizza mit roten Datterino-Tomaten, Ricotta-gefüllter Rand">Pizza Napoli con datterino rosso, cornicione ripieno di ricotta</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Porcina</span><span class="badge bg-danger price-badge">€ 8,00 / 17,00</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, porcini, pomodorini gialli, speck, scaglie" data-en="Fior di latte mozz, porcini mushrooms, yellow tomatoes, speck, cheese flakes" data-es="Mozzarella fior di latte, boletus, tomates amarillos, speck, lascas de queso" data-fr="Mozzarella fior di latte, cèpes, tomates jaunes, speck, copeaux" data-de="Fior di Latte Mozz, Steinpilze, gelbe Tomaten, Speck, Käsespäne">Mozzarella fior di latte, porcini, pomodorini gialli, speck, scaglie</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Vegana</span><span class="badge bg-danger price-badge">€ 6,50 / 14,00</span></h3>
+                    <p class="card-text tr" data-it="Crema di zucchine, pomodorini gialli, funghi arrostiti, peperoni" data-en="Zucchini cream, yellow tomatoes, roasted mushrooms, peppers" data-es="Crema de calabacín, tomates amarillos, champiñones asados, pimientos" data-fr="Crème de courgettes, tomates jaunes, champignons rôtis, poivrons" data-de="Zucchinicreme, gelbe Tomaten, gebratene Pilze, Paprika">Crema di zucchine, pomodorini gialli, funghi arrostiti, peperoni</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine" data-en="🌾 G: Gluten" data-es="🌾 G: Gluten" data-fr="🌾 G: Gluten" data-de="🌾 G: Gluten">🌾 G: Glutine</p>
+                </div></article>
+                
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Noci</span><span class="badge bg-danger price-badge">€ 8,00 / 17,00</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, panna, crema di noci, speck, rucola, parmigiano" data-en="Fior di latte mozz, cream, walnut cream, speck, arugula, parmesan" data-es="Mozzarella fior di latte, nata, crema de nueces, speck, rúcula, parmesano" data-fr="Mozzarella fior di latte, crème, crème de noix, speck, roquette, parmesan" data-de="Fior di Latte Mozz, Sahne, Walnusscreme, Speck, Rucola, Parmesan">Mozzarella fior di latte, panna, crema di noci, speck, rucola, parmigiano</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini, 🥜 F: Frutta a guscio" data-en="🌾 G: Gluten, 🥛 L: Dairy, 🥜 F: Nuts" data-es="🌾 G: Gluten, 🥛 L: Lácteos, 🥜 F: Frutos secos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers, 🥜 F: Fruits à coque" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte, 🥜 F: Nüsse">🌾 G: Glutine, 🥛 L: Latticini, 🥜 F: Frutta a guscio</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Zuccotta</span><span class="badge bg-danger price-badge">€ 8,00 / 17,00</span></h3>
+                    <p class="card-text tr" data-it="Crema di zucca, mozz fior di latte, ricotta, pancetta, scaglie" data-en="Pumpkin cream, fior di latte mozz, ricotta, bacon, cheese flakes" data-es="Crema de calabaza, mozzarella fior di latte, ricotta, panceta, lascas" data-fr="Crème de citrouille, mozzarella fior di latte, ricotta, pancetta, copeaux" data-de="Kürbiscreme, Fior di Latte Mozz, Ricotta, Speck, Käsespäne">Crema di zucca, mozz fior di latte, ricotta, pancetta, scaglie</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>La Viola</span><span class="badge bg-danger price-badge">€ 7,00 / 15,00</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, radicchio saltato, salsiccia, gorgonzola" data-en="Fior di latte mozz, sautéed radicchio, sausage, gorgonzola" data-es="Mozzarella fior di latte, radicchio salteado, salchicha, gorgonzola" data-fr="Mozzarella fior di latte, radicchio sauté, saucisse, gorgonzola" data-de="Fior di Latte Mozz, gebratener Radicchio, Wurst, Gorgonzola">Mozzarella fior di latte, radicchio saltato, salsiccia, gorgonzola</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+            </section>
+
+            <!-- SEZIONE PIZZE ROSSE -->
+            <section id="cat-rosse" class="menu-section d-none">
+                <h2 class="section-title tr" data-it="PIZZE ROSSE" data-en="RED PIZZAS" data-es="PIZZAS ROJAS" data-fr="PIZZAS ROUGES" data-de="ROTE PIZZEN">PIZZE ROSSE</h2>
+                
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Margherita</span><span class="badge bg-danger price-badge">€ 4,50 / 10,00</span></h3>
+                    <p class="card-text tr" data-it="Pomodoro, mozzarella fior di latte, basilico" data-en="Tomato, fior di latte mozzarella, basil" data-es="Tomate, mozzarella fior di latte, albahaca" data-fr="Tomate, mozzarella fior di latte, basilic" data-de="Tomate, Fior di Latte Mozzarella, Basilikum">Pomodoro, mozzarella fior di latte, basilico</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+                
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Napoli</span><span class="badge bg-danger price-badge">€ 4,00 / 9,00</span></h3>
+                    <p class="card-text tr" data-it="Pomodoro, aglio, origano, basilico, olive" data-en="Tomato, garlic, oregano, basil, olives" data-es="Tomate, ajo, orégano, albahaca, aceitunas" data-fr="Tomate, ail, origan, basilic, olives" data-de="Tomate, Knoblauch, Oregano, Basilikum, Oliven">Pomodoro, aglio, origano, basilico, olive</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine" data-en="🌾 G: Gluten" data-es="🌾 G: Gluten" data-fr="🌾 G: Gluten" data-de="🌾 G: Gluten">🌾 G: Glutine</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Marinara</span><span class="badge bg-danger price-badge">€ 4,50 / 10,00</span></h3>
+                    <p class="card-text tr" data-it="Pomodoro, aglio, origano, basilico, olive, acciughe" data-en="Tomato, garlic, oregano, basil, olives, anchovies" data-es="Tomate, ajo, orégano, albahaca, aceitunas, anchoas" data-fr="Tomate, ail, origan, basilic, olives, anchois" data-de="Tomate, Knoblauch, Oregano, Basilikum, Oliven, Sardellen">Pomodoro, aglio, origano, basilico, olive, acciughe</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🐟 P: Pesce" data-en="🌾 G: Gluten, 🐟 P: Fish" data-es="🌾 G: Gluten, 🐟 P: Pescado" data-fr="🌾 G: Gluten, 🐟 P: Poisson" data-de="🌾 G: Gluten, 🐟 P: Fisch">🌾 G: Glutine, 🐟 P: Pesce</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Bufala</span><span class="badge bg-danger price-badge">€ 6,50 / 13,00</span></h3>
+                    <p class="card-text tr" data-it="Pomodoro, mozzarella di bufala, basilico" data-en="Tomato, buffalo mozzarella, basil" data-es="Tomate, mozzarella de búfala, albahaca" data-fr="Tomate, mozzarella de bufflonne, basilic" data-de="Tomate, Büffelmozzarella, Basilikum">Pomodoro, mozzarella di bufala, basilico</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Diavola</span><span class="badge bg-danger price-badge">€ 6,00 / 13,00</span></h3>
+                    <p class="card-text tr" data-it="Pomodoro, mozz fior di latte, olive, salame piccante, basilico" data-en="Tomato, fior di latte mozz, olives, spicy salami, basil" data-es="Tomate, mozzarella fior di latte, aceitunas, salami picante, albahaca" data-fr="Tomate, mozzarella fior di latte, olives, salami piquant, basilic" data-de="Tomate, Fior di Latte Mozz, Oliven, scharfe Salami, Basilikum">Pomodoro, mozz fior di latte, olive, salame piccante, basilico</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Capricciosa</span><span class="badge bg-danger price-badge">€ 6,50 / 14,00</span></h3>
+                    <p class="card-text tr" data-it="Pomodoro, mozz fior di latte, cotto, funghi, carciofi" data-en="Tomato, fior di latte mozz, cooked ham, mushrooms, artichokes" data-es="Tomate, mozzarella fior di latte, jamón cocido, champiñones, alcachofas" data-fr="Tomate, mozzarella fior di latte, jambon cuit, champignons, artichauts" data-de="Tomate, Fior di Latte Mozz, Kochschinken, Pilze, Artischocken">Pomodoro, mozz fior di latte, cotto, funghi, carciofi</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Siciliana</span><span class="badge bg-danger price-badge">€ 6,50 / 14,00</span></h3>
+                    <p class="card-text tr" data-it="Pomodoro, mozz fior di latte, melanzane a funghetto, salsiccia" data-en="Tomato, fior di latte mozz, diced eggplants, sausage" data-es="Tomate, mozzarella fior di latte, berenjenas, salchicha" data-fr="Tomate, mozzarella fior di latte, aubergines en dés, saucisse" data-de="Tomate, Fior di Latte Mozz, Auberginenwürfel, Wurst">Pomodoro, mozz fior di latte, melanzane a funghetto, salsiccia</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+            </section>
+
+            <!-- SEZIONE CALZONI -->
+            <section id="cat-calzoni" class="menu-section d-none">
+                <h2 class="section-title tr" data-it="CALZONI" data-en="CALZONES" data-es="CALZONES" data-fr="CALZONES" data-de="CALZONEN">CALZONI</h2>
+                
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span class="tr" data-it="Calzone Classico" data-en="Classic Calzone" data-es="Calzone Clásico" data-fr="Calzone Classique" data-de="Klassische Calzone">Calzone Classico</span><span class="badge bg-success price-badge">€ 6,50</span></h3>
+                    <p class="card-text tr" data-it="Pomodoro, ricotta, mozzarella fior di latte, cotto, funghi" data-en="Tomato, ricotta, fior di latte mozzarella, cooked ham, mushrooms" data-es="Tomate, ricotta, mozzarella fior di latte, jamón cocido, champiñones" data-fr="Tomate, ricotta, mozzarella fior di latte, jambon cuit, champignons" data-de="Tomate, Ricotta, Fior di Latte Mozzarella, Kochschinken, Pilze">Pomodoro, ricotta, mozzarella fior di latte, cotto, funghi</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span class="tr" data-it="Calzone Fritto" data-en="Fried Calzone" data-es="Calzone Frito" data-fr="Calzone Frit" data-de="Frittierte Calzone">Calzone Fritto</span><span class="badge bg-success price-badge">€ 6,50</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, cicoli napoletani, ricotta, basilico" data-en="Fior di latte mozzarella, Neapolitan pork cracklings, ricotta, basil" data-es="Mozzarella fior di latte, chicharrones napolitanos, ricotta, albahaca" data-fr="Mozzarella fior di latte, grattons napolitains, ricotta, basilic" data-de="Fior di Latte Mozzarella, neapolitanische Grieben, Ricotta, Basilikum">Mozzarella fior di latte, cicoli napoletani, ricotta, basilico</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span class="tr" data-it="Calzone Scarola" data-en="Escarole Calzone" data-es="Calzone Escarola" data-fr="Calzone Scarole" data-de="Endivien Calzone">Calzone Scarola</span><span class="badge bg-success price-badge">€ 6,50</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, scarola cotta, salsiccia, provola" data-en="Fior di latte mozzarella, cooked escarole, sausage, provola cheese" data-es="Mozzarella fior di latte, escarola cocida, salchicha, queso provola" data-fr="Mozzarella fior di latte, scarole cuite, saucisse, provola" data-de="Fior di Latte Mozzarella, gekochte Endivie, Wurst, Provola">Mozzarella fior di latte, scarola cotta, salsiccia, provola</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+            </section>
+
+            <!-- SEZIONE PIZZE BIANCHE -->
+            <section id="cat-bianche" class="menu-section d-none">
+                <h2 class="section-title tr" data-it="PIZZE BIANCHE" data-en="WHITE PIZZAS" data-es="PIZZAS BLANCAS" data-fr="PIZZAS BLANCHES" data-de="WEIßE PIZZEN">PIZZE BIANCHE</h2>
+                
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Eva</span><span class="badge bg-danger price-badge">€ 6,50 / 14,00</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, panna, cotto, mais" data-en="Fior di latte mozzarella, cream, cooked ham, corn" data-es="Mozzarella fior di latte, nata, jamón cocido, maíz" data-fr="Mozzarella fior di latte, crème, jambon cuit, maïs" data-de="Fior di Latte Mozzarella, Sahne, Kochschinken, Mais">Mozzarella fior di latte, panna, cotto, mais</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Italia</span><span class="badge bg-danger price-badge">€ 7,00 / 15,00</span></h3>
+                    <p class="card-text tr" data-it="Mozz fior di latte, crudo, rucola, pomodorini, scaglie" data-en="Fior di latte mozz, Parma ham, arugula, tomatoes, cheese flakes" data-es="Mozzarella fior di latte, jamón serrano, rúcula, tomates, lascas" data-fr="Mozzarella fior di latte, jambon cru, roquette, tomates, copeaux" data-de="Fior di Latte Mozz, Parmaschinken, Rucola, Tomaten, Käsespäne">Mozz fior di latte, crudo, rucola, pomodorini, scaglie</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>La Riccia</span><span class="badge bg-danger price-badge">€ 7,00 / 15,00</span></h3>
+                    <p class="card-text tr" data-it="Mozz fior di latte, provola. All'uscita: scarola, pomodorini, olive nere" data-en="Fior di latte mozz, provola. After: escarole, tomatoes, black olives" data-es="Mozz fior di latte, provola. Fuera: escarola, tomates, aceitunas negras" data-fr="Mozz fior di latte, provola. À la sortie: scarole, tomates, olives noires" data-de="Fior di Latte Mozz, Provola. Danach: Endivie, Tomaten, schwarze Oliven">Mozz fior di latte, provola. All'uscita: scarola, pomodorini, olive nere</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Croccotto</span><span class="badge bg-danger price-badge">€ 6,00 / 13,00</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, crocchè, cotto" data-en="Fior di latte mozzarella, potato croquette, cooked ham" data-es="Mozzarella fior di latte, croqueta, jamón cocido" data-fr="Mozzarella fior di latte, croquette, jambon cuit" data-de="Fior di Latte Mozzarella, Kartoffelkrokette, Kochschinken">Mozzarella fior di latte, crocchè, cotto</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Ortolana</span><span class="badge bg-danger price-badge">€ 6,50 / 14,00</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, zucchine, peperoni, melanzane" data-en="Fior di latte mozzarella, zucchini, peppers, eggplants" data-es="Mozzarella fior di latte, calabacín, pimientos, berenjenas" data-fr="Mozzarella fior di latte, courgettes, poivrons, aubergines" data-de="Fior di Latte Mozzarella, Zucchini, Paprika, Auberginen">Mozzarella fior di latte, zucchine, peperoni, melanzane</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Baby</span><span class="badge bg-danger price-badge">€ 6,00 / 13,00</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, wurstel, patatine" data-en="Fior di latte mozzarella, hot dogs, french fries" data-es="Mozzarella fior di latte, salchichas, patatas fritas" data-fr="Mozzarella fior di latte, saucisses de Strasbourg, frites" data-de="Fior di Latte Mozzarella, Würstchen, Pommes frites">Mozzarella fior di latte, wurstel, patatine</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Broccoli e Salsiccia</span><span class="badge bg-danger price-badge">€ 6,50 / 14,00</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, broccoli, salsiccia" data-en="Fior di latte mozzarella, broccoli, sausage" data-es="Mozzarella fior di latte, brócoli, salchicha" data-fr="Mozzarella fior di latte, brocoli, saucisse" data-de="Fior di Latte Mozzarella, Brokkoli, Wurst">Mozzarella fior di latte, broccoli, salsiccia</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>4 Formaggi</span><span class="badge bg-danger price-badge">€ 6,50 / 14,00</span></h3>
+                    <p class="card-text tr" data-it="Mozz fior di latte, provola, galbanone, gorgonzola, panna" data-en="Fior di latte mozz, provola, galbanone, gorgonzola, cream" data-es="Mozz fior di latte, provola, galbanone, gorgonzola, nata" data-fr="Mozz fior di latte, provola, galbanone, gorgonzola, crème" data-de="Fior di Latte Mozz, Provola, Galbanone, Gorgonzola, Sahne">Mozz fior di latte, provola, galbanone, gorgonzola, panna</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Arrostita</span><span class="badge bg-danger price-badge">€ 7,00 / 15,00</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, provola, pancetta, pomodorini, funghi arrostiti" data-en="Fior di latte mozz, provola, bacon, tomatoes, roasted mushrooms" data-es="Mozzarella fior di latte, provola, panceta, tomates, champiñones asados" data-fr="Mozzarella fior di latte, provola, pancetta, tomates, champignons rôtis" data-de="Fior di Latte Mozzarella, Provola, Speck, Tomaten, gebratene Pilze">Mozzarella fior di latte, provola, pancetta, pomodorini, funghi arrostiti</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Pizza del nonno</span><span class="badge bg-danger price-badge">€ 7,50 / 15,00</span></h3>
+                    <p class="card-text tr" data-it="Mozzarella fior di latte, funghi champignon, crudo, pomodorini secchi" data-en="Fior di latte mozz, champignon mushrooms, Parma ham, sun-dried tomatoes" data-es="Mozzarella fior di latte, champiñones, jamón serrano, tomates secos" data-fr="Mozzarella fior di latte, champignons, jambon cru, tomates séchées" data-de="Fior di Latte Mozzarella, Champignons, Parmaschinken, getrocknete Tomaten">Mozzarella fior di latte, funghi champignon, crudo, pomodorini secchi</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+            </section>
+
+            <!-- SEZIONE SALTIMBOCCA & PANUOZZI -->
+            <section id="cat-saltimbocca" class="menu-section d-none">
+                <h2 class="section-title tr" data-it="SALTIMBOCCA E PANUOZZI" data-en="SALTIMBOCCA & PANUOZZI" data-es="SALTIMBOCCA Y PANUOZZI" data-fr="SALTIMBOCCA & PANUOZZI" data-de="SALTIMBOCCA & PANUOZZI">SALTIMBOCCA & PANUOZZI</h2>
+                
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Parma</span><span class="badge bg-danger price-badge">€ 6,50 / 13,00</span></h3>
+                    <p class="card-text tr" data-it="Prosciutto crudo, mozzarella fior di latte" data-en="Parma ham, fior di latte mozzarella" data-es="Jamón serrano, mozzarella fior di latte" data-fr="Jambon cru, mozzarella fior di latte" data-de="Parmaschinken, Fior di Latte Mozzarella">Prosciutto crudo, mozzarella fior di latte</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+                
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Classic</span><span class="badge bg-danger price-badge">€ 6,00 / 12,00</span></h3>
+                    <p class="card-text tr" data-it="Pancetta, funghi, provola" data-en="Bacon, mushrooms, provola cheese" data-es="Panceta, champiñones, queso provola" data-fr="Pancetta, champignons, provola" data-de="Speck, Pilze, Provola">Pancetta, funghi, provola</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Baby</span><span class="badge bg-danger price-badge">€ 6,00 / 12,00</span></h3>
+                    <p class="card-text tr" data-it="Wurstel, patatine*, provola" data-en="Hot dogs, french fries*, provola cheese" data-es="Salchichas, patatas fritas*, queso provola" data-fr="Saucisses, frites*, provola" data-de="Würstchen, Pommes frites*, Provola">Wurstel, patatine*, provola</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Panzacotto</span><span class="badge bg-danger price-badge">€ 6,00 / 12,00</span></h3>
+                    <p class="card-text tr" data-it="Crocchè, cotto, provola" data-en="Potato croquette, cooked ham, provola cheese" data-es="Croqueta, jamón cocido, queso provola" data-fr="Croquette, jambon cuit, provola" data-de="Kartoffelkrokette, Kochschinken, Provola">Crocchè, cotto, provola</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Eva</span><span class="badge bg-danger price-badge">€ 6,00 / 12,00</span></h3>
+                    <p class="card-text tr" data-it="Speck, provola, gorgonzola" data-en="Speck, provola cheese, gorgonzola" data-es="Speck, queso provola, gorgonzola" data-fr="Speck, provola, gorgonzola" data-de="Speck, Provola, Gorgonzola">Speck, provola, gorgonzola</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini" data-en="🌾 G: Gluten, 🥛 L: Dairy" data-es="🌾 G: Gluten, 🥛 L: Lácteos" data-fr="🌾 G: Gluten, 🥛 L: Laitiers" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte">🌾 G: Glutine, 🥛 L: Latticini</p>
+                </div></article>
+
+                <article class="card"><div class="card-body">
+                    <h3 class="card-title d-flex justify-content-between"><span>Totonno</span><span class="badge bg-danger price-badge">€ 7,00 / 12,00</span></h3>
+                    <p class="card-text tr" data-it="Provola in cottura, tonno, scarola, pomodorini, mais, olive" data-en="Baked provola, tuna, escarole, tomatoes, corn, olives" data-es="Provola horneada, atún, escarola, tomates, maíz, aceitunas" data-fr="Provola cuite, thon, scarole, tomates, maïs, olives" data-de="Gebackener Provola, Thunfisch, Endivie, Tomaten, Mais, Oliven">Provola in cottura, tonno, scarola, pomodorini, mais, olive</p>
+                    <p class="allergen-info tr" data-it="🌾 G: Glutine, 🥛 L: Latticini, 🐟 P: Pesce" data-en="🌾 G: Gluten, 🥛 L: Dairy, 🐟 P: Fish" data-es="🌾 G: Gluten, 🥛 L: Lácteos, 🐟 P: Pescado" data-fr="🌾 G: Gluten, 🥛 L: Laitiers, 🐟 P: Poisson" data-de="🌾 G: Gluten, 🥛 L: Milchprodukte, 🐟 P: Fisch">🌾 G: Glutine, 🥛 L: Latticini, 🐟 P: Pesce</p>
+                </div></article>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- FOOTER COPYRIGHT & CONTATTI -->
+    <footer class="mt-auto py-4">
+        <div class="container text-center">
+            <h5 class="fw-bold text-light mb-3">O'SciupaPizza</h5>
+            <p class="mb-1">
+                <i class="bi bi-geo-alt-fill text-danger me-1"></i> Via Giovan Battista Casciello, 5, 84018 Scafati SA
+            </p>
+            <p class="mb-3">
+                <i class="bi bi-telephone-fill text-success me-1"></i> <a href="tel:+393289316438" class="text-decoration-none">328 931 6438</a>
+            </p>
+            <hr class="border-secondary mx-auto" style="width: 50%;">
+            <p class="mt-3 mb-0" style="font-size: 0.8rem;">
+                &copy; 2026 Pizzeria O'SciupaPizza.<br>
+                Creato da <span class="text-light fw-bold">Primo Vinicio Calarese</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script Logica App -->
+    <script>
+        function changeLanguage(lang, flagClass, langCodeText) {
+            document.documentElement.lang = lang;
+            document.getElementById('currentLangBtn').innerHTML = `<span class="fi ${flagClass}"></span> ${langCodeText}`;
+            
+            const elements = document.querySelectorAll('.tr');
+            elements.forEach(el => {
+                const translatedText = el.getAttribute('data-' + lang);
+                if (translatedText) {
+                    el.innerHTML = translatedText;
+                }
+            });
+            window.scrollTo(0,0);
+        }
+
+        function showHome() {
+            document.getElementById('homeView').classList.remove('d-none');
+            document.getElementById('categoryView').classList.add('d-none');
+            document.getElementById('backBtn').style.visibility = 'hidden';
+            window.scrollTo(0,0);
+        }
+
+        function showCategory(categoryId) {
+            document.getElementById('homeView').classList.add('d-none');
+            document.getElementById('categoryView').classList.remove('d-none');
+            document.getElementById('backBtn').style.visibility = 'visible';
+            
+            const sections = document.querySelectorAll('.menu-section');
+            sections.forEach(sec => sec.classList.add('d-none'));
+            
+            document.getElementById('cat-' + categoryId).classList.remove('d-none');
+            window.scrollTo(0,0);
+        }
+    </script>
+</body>
+</html>
