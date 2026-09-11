@@ -56,6 +56,7 @@
         .allergen-info { font-size: 0.8rem; color: #777; margin: 0; background-color: #f8f9fa; padding: 5px 8px; border-radius: 6px; display: inline-block; margin-top: 5px;}
         
         .section-title { font-size: 1.5rem; font-weight: 800; color: #dc3545; margin-bottom: 20px; text-align: center; text-transform: uppercase; }
+        .subcategory-title { font-size: 1.1rem; font-weight: 800; color: #6c757d; margin-top: 25px; margin-bottom: 10px; padding-left: 5px; }
         .dropdown-toggle::after { display: none; }
         .fi { border-radius: 2px; } 
 
@@ -111,6 +112,9 @@
             <button class="category-btn w-100" onclick="showCategory('saltimbocca')">
                 <span class="tr" data-it="Saltimbocca & Panuozzi" data-en="Saltimbocca & Panuozzi" data-es="Saltimbocca y Panuozzi" data-fr="Saltimbocca & Panuozzi" data-de="Saltimbocca & Panuozzi">Saltimbocca & Panuozzi</span>
             </button>
+            <button class="category-btn w-100" onclick="showCategory('bibite')">
+                <span class="tr" data-it="Bibite & Birre" data-en="Drinks & Beers" data-es="Bebidas y Cervezas" data-fr="Boissons et Bières" data-de="Getränke & Biere">Bibite & Birre</span>
+            </button>
             
             <hr class="my-4 border-secondary opacity-25">
             
@@ -124,6 +128,92 @@
         <!-- VISTA 2: DETTAGLIO CATEGORIA -->
         <div id="categoryView" class="d-none">
             
+            <!-- SEZIONE BIBITE (AGGIUNTA) -->
+            <section id="cat-bibite" class="menu-section d-none">
+                <h2 class="section-title tr" data-it="BIBITE" data-en="DRINKS" data-es="BEBIDAS" data-fr="BOISSONS" data-de="GETRÄNKE">BIBITE</h2>
+                
+                <!-- Acqua -->
+                <h4 class="subcategory-title tr" data-it="ACQUA" data-en="WATER" data-es="AGUA" data-fr="EAU" data-de="WASSER">ACQUA</h4>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0">
+                        <span class="tr" data-it="Acqua minerale frizzante 1 LT" data-en="Sparkling mineral water 1 LT" data-es="Agua mineral con gas 1 LT" data-fr="Eau minérale gazeuse 1 LT" data-de="Mineralwasser mit Kohlensäure 1 LT">Acqua minerale frizzante 1 LT</span>
+                        <span class="badge bg-primary price-badge">€ 2,00</span>
+                    </h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0">
+                        <span class="tr" data-it="Acqua piccola 500 ML" data-en="Small water 500 ML" data-es="Agua pequeña 500 ML" data-fr="Petite eau 500 ML" data-de="Kleines Wasser 500 ML">Acqua piccola 500 ML</span>
+                        <span class="badge bg-primary price-badge">€ 1,00</span>
+                    </h3>
+                </div></article>
+
+                <!-- Lattine -->
+                <h4 class="subcategory-title tr" data-it="LATTINE" data-en="CANS" data-es="LATAS" data-fr="CANETTES" data-de="DOSEN">LATTINE</h4>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>Coca-Cola</span><span class="badge bg-primary price-badge">€ 2,50</span></h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>Coca-Cola Zero</span><span class="badge bg-primary price-badge">€ 2,50</span></h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>Sprite</span><span class="badge bg-primary price-badge">€ 2,50</span></h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>Fanta</span><span class="badge bg-primary price-badge">€ 2,50</span></h3>
+                </div></article>
+
+                <!-- Formati Grandi -->
+                <h4 class="subcategory-title tr" data-it="BOTTIGLIE GRANDI" data-en="LARGE BOTTLES" data-es="BOTELLAS GRANDES" data-fr="GRANDES BOUTEILLES" data-de="GROßE FLASCHEN">BOTTIGLIE GRANDI</h4>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>Coca-Cola / Fanta 1,5 LT</span><span class="badge bg-primary price-badge">€ 4,00</span></h3>
+                </div></article>
+
+                <!-- Birre -->
+                <h4 class="subcategory-title tr" data-it="BIRRE" data-en="BEERS" data-es="CERVEZAS" data-fr="BIÈRES" data-de="BIERE">BIRRE</h4>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>Nastro Azzurro 33 cl</span><span class="badge bg-primary price-badge">€ 2,00</span></h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>Nastro Azzurro 66 cl</span><span class="badge bg-primary price-badge">€ 3,50</span></h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>Heineken 33 cl</span><span class="badge bg-primary price-badge">€ 2,50</span></h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>Heineken 66 cl</span><span class="badge bg-primary price-badge">€ 3,50</span></h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>Tennent's</span><span class="badge bg-primary price-badge">€ 3,50</span></h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>N'Artigiana</span><span class="badge bg-primary price-badge">€ 6,00</span></h3>
+                </div></article>
+
+                <!-- Liquori -->
+                <h4 class="subcategory-title tr" data-it="LIQUORI" data-en="LIQUORS" data-es="LICORES" data-fr="LIQUEURS" data-de="SPIRITUOSEN">LIQUORI</h4>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0">
+                        <span class="tr" data-it="Grappa barricata" data-en="Barrel-aged Grappa" data-es="Grappa envejecida" data-fr="Grappa vieillie" data-de="Fassgereifter Grappa">Grappa barricata</span>
+                        <span class="badge bg-primary price-badge">€ 2,50</span>
+                    </h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0">
+                        <span class="tr" data-it="Amari" data-en="Bitters (Amari)" data-es="Amargos (Amari)" data-fr="Amers (Amari)" data-de="Magenbitter (Amari)">Amari</span>
+                        <span class="badge bg-primary price-badge">€ 2,00</span>
+                    </h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0"><span>Limoncello / Meloncello</span><span class="badge bg-primary price-badge">€ 2,00</span></h3>
+                </div></article>
+                <article class="card"><div class="card-body py-3">
+                    <h3 class="card-title d-flex justify-content-between mb-0">
+                        <span class="tr" data-it="Bollicine" data-en="Bubbles (Sparkling wine)" data-es="Espumoso" data-fr="Bulles (Vin mousseux)" data-de="Sekt">Bollicine</span>
+                        <span class="badge bg-primary price-badge">€ 10,00</span>
+                    </h3>
+                </div></article>
+            </section>
+
             <!-- SEZIONE INFO E CONTATTI -->
             <section id="cat-info" class="menu-section d-none">
                 <h2 class="section-title tr" data-it="INFO & CONTATTI" data-en="INFO & CONTACTS" data-es="INFO Y CONTACTOS" data-fr="INFO & CONTACTS" data-de="INFO & KONTAKTE">INFO & CONTATTI</h2>
@@ -518,7 +608,6 @@
             window.scrollTo(0,0);
         }
 
-        // Funzione per copiare la password del Wi-Fi
         function copyWifi() {
             const pwdText = document.getElementById('wifiPasswordText').innerText;
             navigator.clipboard.writeText(pwdText).then(function() {
