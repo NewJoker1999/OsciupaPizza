@@ -14,6 +14,23 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css"/>
     
     <style>
+        /* INIZIO SISTEMA DI AUTO-RIDIMENSIONAMENTO PROPORZIONALE */
+        html {
+            /* 
+               - 12px è il limite minimo (per non farlo sparire su orologi o schermi minuscoli)
+               - 3.5vw significa che la grandezza sarà sempre il 3.5% della larghezza dello schermo
+               - 22px è il limite massimo (per non avere bottoni giganti su TV 4K)
+            */
+            font-size: clamp(12px, 3.5vw, 22px) !important;
+        }
+
+        /* Su schermi molto grandi, non dovrebbe diventare troppo largo 
+           ma dovrebbe mantenere le proporzioni ideali da "menu mobile" al centro dello schermo */
+        @media (min-width: 992px) {
+            main.container {
+                max-width: 800px;
+            }
+        }
         body { 
             padding-top: 70px; 
             background-color: #f4f6f8; 
